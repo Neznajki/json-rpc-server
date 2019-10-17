@@ -1,11 +1,8 @@
 # json-rpc-authorization
 makes authorization for json rpc
 
-# bundle installation
-* composer install 
-
 # installation
-* composer install neznajki/json-rpc-server
+* composer require neznajki/json-rpc-server
 * services.yaml
 ```yaml
 imports:
