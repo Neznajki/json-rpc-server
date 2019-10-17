@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\JsonRpcServer;
+namespace JsonRpcServerBundle;
 
 
 use JsonRpcServerBundle\Contract\MethodHandlerInterface;
