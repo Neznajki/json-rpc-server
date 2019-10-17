@@ -1,0 +1,13 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    JsonRpcServerBundle\Subscriber\ExceptionSubscriber: ~
+    JsonRpcServerBundle\Subscriber\MethodExceptionEventSubscriber: ~
+
+    JsonRpcServerBundle\Controller\ApiEndpointController: ~
+
+    JsonRpcServerBundle\Service\MethodExecutorService: ~
+
+    JsonRpcServerBundle\Service\MethodCollectionService: ~

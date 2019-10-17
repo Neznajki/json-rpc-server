@@ -1,0 +1,3 @@
+jsonRpc:
+    path: /jsonRpc
+    controller: JsonRpcServerBundle\Controller\ApiEndpointController::apiAction

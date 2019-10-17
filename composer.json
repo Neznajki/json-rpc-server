@@ -1,0 +1,35 @@
+{
+    "name": "neznajki/json-rpc-server",
+    "description": "server for json rpc",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Maris Locmelis",
+            "email": "neznajki@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "JsonRpcServerBundle\\": "src"
+        }
+    },
+    "minimum-stability": "stable",
+    "require": {
+        "php": ">=7.3",
+        "neznajki/json-rpc-server-contracts": "^1.0"
+    },
+    "require-dev": {
+        "symfony/dependency-injection": "^4.3",
+        "symfony/framework-bundle": "^4.3",
+        "symfony/flex": "^1.4",
+        "symfony/event-dispatcher": "^4.3"
+
+    },
+    "repositories": {
+        "contracts": {
+            "type": "git",
+            "url": "git@github.com:Neznajki/json-rpc-server-contracts.git"
+        }
+    }
+}
