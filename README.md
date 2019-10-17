@@ -8,7 +8,7 @@ makes authorization for json rpc
 * composer install neznajki/json-rpc-server
 * services.yaml
 ```yaml
-
+imports:
     - { resource: '@JsonRpcServerBundle/Resources/config/services.yaml' }
 
 ```
