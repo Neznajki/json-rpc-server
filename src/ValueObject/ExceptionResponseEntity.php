@@ -36,15 +36,20 @@ class ExceptionResponseEntity implements ResponseEntityInterface
     public function jsonSerialize(): array
     {
         $result = [
-            'jsonrpc' => $this->requestEntity->getJsonrpc() ?? '2.0',
-            'error' => [
-                'code' => $this->exception->getCode(),
+            'jsonrpc' => '2.0',
+            'error'   => [
+                'code'    => $this->exception->getCode(),
                 'message' => $this->exception->getMessage(),
             ],
         ];
 
-        if ($this->requestEntity && $this->requestEntity->getId()) {
-            $result['id'] = $this->requestEntity->getId();
+        if ($this->requestEntity) {
+            if ($this->requestEntity->getId()) {
+                $result['id']      = $this->requestEntity->getId();
+            }
+            if ($this->requestEntity->getJsonrpc()) {
+                $result['jsonrpc'] = $this->requestEntity->getJsonrpc();
+            }
         }
 
         return $result;
