@@ -5,7 +5,7 @@ namespace JsonRpcServerBundle\Exception;
 
 
 use Exception;
-use JsonRpcServerContracts\Contract\JsonRpcException;
+use JsonRpcServerCommon\Contract\JsonRpcException;
 use Throwable;
 
 class InvalidRequestException extends Exception implements JsonRpcException

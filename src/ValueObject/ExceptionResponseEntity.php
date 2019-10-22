@@ -6,7 +6,7 @@ namespace JsonRpcServerBundle\ValueObject;
 
 use JsonRpcServerBundle\Contract\ResponseEntityInterface;
 use JsonRpcServerBundle\DataObject\RequestEntity;
-use JsonRpcServerContracts\Contract\JsonRpcException;
+use JsonRpcServerCommon\Contract\JsonRpcException;
 
 class ExceptionResponseEntity implements ResponseEntityInterface
 {

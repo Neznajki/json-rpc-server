@@ -6,7 +6,7 @@ namespace JsonRpcServerBundle\Subscriber;
 
 use JsonRpcServerBundle\ValueObject\ExceptionResponseEntity;
 use JsonRpcServerBundle\Exception\InternalErrorException;
-use JsonRpcServerContracts\Contract\JsonRpcException;
+use JsonRpcServerCommon\Contract\JsonRpcException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;

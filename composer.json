@@ -17,7 +17,8 @@
     "minimum-stability": "stable",
     "require": {
         "php": ">=7.3",
-        "neznajki/json-rpc-server-contracts": "^1.0"
+        "ext-json": "*",
+        "neznajki/json-rpc-common": "^1.0"
     },
     "require-dev": {
         "symfony/dependency-injection": "^4.3",
@@ -29,7 +30,7 @@
     "repositories": {
         "contracts": {
             "type": "git",
-            "url": "git@github.com:Neznajki/json-rpc-server-contracts.git"
+            "url": "git@github.com:Neznajki/json-rpc-common.git"
         }
     }
 }

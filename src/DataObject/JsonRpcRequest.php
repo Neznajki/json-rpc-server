@@ -8,7 +8,7 @@ use JsonRpcServerBundle\Exception\InvalidParamsException;
 use JsonRpcServerBundle\ValueObject\ExceptionResponseEntity;
 use JsonRpcServerBundle\Exception\InternalErrorException;
 use JsonRpcServerBundle\Exception\InvalidRequestException;
-use JsonRpcServerContracts\Contract\JsonRpcException;
+use JsonRpcServerCommon\Contract\JsonRpcException;
 use Symfony\Component\HttpFoundation\Request;
 use Throwable;
 
