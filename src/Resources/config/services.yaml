@@ -3,7 +3,12 @@ services:
         autowire: true
         autoconfigure: true
 
-    JsonRpcServerBundle\Subscriber\ExceptionSubscriber: ~
+    JsonRpcServerBundle\Subscriber\ExceptionSubscriber:
+        class: JsonRpcServerBundle\Subscriber\ExceptionSubscriber
+        arguments:
+            - '@Psr\Log\LoggerInterface'
+            - '%json_rpc_http_server.http_endpoint_path%'
+
     JsonRpcServerBundle\Subscriber\MethodExceptionEventSubscriber: ~
 
     JsonRpcServerBundle\Controller\ApiEndpointController: ~
