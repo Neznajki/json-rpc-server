@@ -8,8 +8,7 @@ interface MethodHandlerInterface
 {
     /** @noinspection PhpDocSignatureInspection */
     /**
-     * NOTICE all arguments are required in case of strict definition
-     * NOTICE all arguments are optional with default value definition
+     * NOTICE all arguments are optional with default value definition, use getRequiredParameters to specify them
      *
      * @param string[]|int[] ...$arguments
      * @return mixed json serializable data
