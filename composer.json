@@ -21,10 +21,10 @@
         "neznajki/json-rpc-common": "^1.0"
     },
     "require-dev": {
-        "symfony/dependency-injection": "^4.3",
-        "symfony/framework-bundle": "^4.3",
+        "symfony/dependency-injection": "^4.4",
+        "symfony/framework-bundle": "^4.4",
         "symfony/flex": "^1.4",
-        "symfony/event-dispatcher": "^4.3"
+        "symfony/event-dispatcher": "^4.4"
 
     },
     "repositories": {
