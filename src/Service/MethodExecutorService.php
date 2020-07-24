@@ -49,17 +49,17 @@ class MethodExecutorService
 
         $parameters = $reflectionMethod->getParameters();
 
-        $arguments             = [];
         $requiredArguments     = $method->getRequiredParameters();
         $leftRequiredArguments = array_flip($requiredArguments);
         foreach ($parameters as $parameter) {
             $arg = $this->getMethodParameter($requiredArguments, $parameter, $requestEntity);
 
-            $arguments[] = $arg;
             $paramName   = $parameter->getName();
             if (array_key_exists($paramName, $leftRequiredArguments)) {
                 unset($leftRequiredArguments[$paramName]);
             }
+
+            $method->setParameter($paramName, $arg);
         }
 
         if (! empty($leftRequiredArguments)) {
@@ -68,12 +68,9 @@ class MethodExecutorService
             );
         }
 
-        /** @noinspection PhpMethodParametersCountMismatchInspection */
-        $response = $method->handle(... $arguments);
+        $response = $method->handle();
 
-        $successResponseEntity = new SuccessResponseEntity($requestEntity, $response);
-
-        return $successResponseEntity;
+        return new SuccessResponseEntity($requestEntity, $response);
     }
 
     /**
