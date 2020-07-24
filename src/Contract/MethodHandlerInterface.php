@@ -6,14 +6,19 @@ namespace JsonRpcServerBundle\Contract;
 
 interface MethodHandlerInterface
 {
-    /** @noinspection PhpDocSignatureInspection */
     /**
      * NOTICE all arguments are optional with default value definition, use getRequiredParameters to specify them
      *
-     * @param string[]|int[] ...$arguments
      * @return mixed json serializable data
      */
     public function handle();
+
+    /**
+     * @param string $paramName
+     * @param mixed $value
+     * @return void
+     */
+    public function setParameter(string $paramName, $value): void ;
 
     /**
      * @return string
