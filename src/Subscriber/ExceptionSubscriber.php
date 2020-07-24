@@ -7,11 +7,13 @@ namespace JsonRpcServerBundle\Subscriber;
 use JsonRpcServerBundle\ValueObject\ExceptionResponseEntity;
 use JsonRpcServerBundle\Exception\InternalErrorException;
 use JsonRpcServerCommon\Contract\JsonRpcException;
+use LogicException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Throwable;
 
 class ExceptionSubscriber implements EventSubscriberInterface
 {
@@ -51,7 +53,8 @@ class ExceptionSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $exception = $event->getException();
+        $exception = $this->getExceptionFromEvent($event);
+
         $context   = [(string)$exception];
 
         if ($exception instanceof JsonRpcException) {
@@ -67,11 +70,14 @@ class ExceptionSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $exception = $event->getException();
+        $exception = $this->getExceptionFromEvent($event);
 
-        if (! $exception instanceof JsonRpcException) {
+        if (empty($exception)) {
+            $exception = new InternalErrorException('exception could not be detected');
+        } elseif (! $exception instanceof JsonRpcException) {
             $exception = new InternalErrorException('internal server error please report', $exception);
         }
+
         $event->setResponse(new JsonResponse(new ExceptionResponseEntity($exception)));
     }
 
@@ -81,5 +87,20 @@ class ExceptionSubscriber implements EventSubscriberInterface
     public function getLogger(): LoggerInterface
     {
         return $this->logger;
+    }
+
+    /**
+     * @param ExceptionEvent $event
+     * @return Throwable
+     */
+    public function getExceptionFromEvent(ExceptionEvent $event): Throwable
+    {
+        if (method_exists($event, 'getException')) {
+            return $event->getException();
+        } elseif (method_exists($event, 'getThrowable')) {
+            return $event->getThrowable();
+        }
+
+        throw new LogicException("could not detect exception");
     }
 }
