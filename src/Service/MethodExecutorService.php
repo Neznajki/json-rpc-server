@@ -9,10 +9,8 @@ use JsonRpcServerBundle\ValueObject\SuccessResponseEntity;
 use JsonRpcServerBundle\Exception\InternalErrorException;
 use JsonRpcServerBundle\Exception\InvalidParamsException;
 use JsonRpcServerBundle\Exception\MethodNotFoundException;
-use ReflectionClass;
 use ReflectionException;
 use ReflectionParameter;
-use RuntimeException;
 
 /**
  * Class MethodExecutorService
@@ -35,26 +33,18 @@ class MethodExecutorService
     /**
      * @param RequestEntity $requestEntity
      * @return SuccessResponseEntity
-     * @throws InvalidParamsException
      * @throws MethodNotFoundException
-     * @throws ReflectionException
      * @throws InternalErrorException
+     * @throws InvalidParamsException
      */
     public function executeMethod(RequestEntity $requestEntity): SuccessResponseEntity
     {
         $method = $this->getMethodCollectionService()->getMethod($requestEntity->getMethod());
 
-        $classReflection  = new ReflectionClass($method);
-        $reflectionMethod = $classReflection->getMethod('handle');
-
-        $parameters = $reflectionMethod->getParameters();
-
         $requiredArguments     = $method->getRequiredParameters();
         $leftRequiredArguments = array_flip($requiredArguments);
-        foreach ($parameters as $parameter) {
-            $arg = $this->getMethodParameter($requiredArguments, $parameter, $requestEntity);
+        foreach ($requestEntity->getParams() as $paramName => $arg) {
 
-            $paramName   = $parameter->getName();
             if (array_key_exists($paramName, $leftRequiredArguments)) {
                 unset($leftRequiredArguments[$paramName]);
             }
@@ -63,7 +53,7 @@ class MethodExecutorService
         }
 
         if (! empty($leftRequiredArguments)) {
-            throw new RuntimeException(
+            throw new InvalidParamsException(
                 sprintf('required parameters are not described as injections (%s)', implode(', ', array_keys($leftRequiredArguments)))
             );
         }

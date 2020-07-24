@@ -70,13 +70,7 @@ class ExceptionSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $exception = $this->getExceptionFromEvent($event);
-
-        if (empty($exception)) {
-            $exception = new InternalErrorException('exception could not be detected');
-        } elseif (! $exception instanceof JsonRpcException) {
-            $exception = new InternalErrorException('internal server error please report', $exception);
-        }
+        $exception = $this->wrapException($this->getExceptionFromEvent($event));
 
         $event->setResponse(new JsonResponse(new ExceptionResponseEntity($exception)));
     }
@@ -102,5 +96,20 @@ class ExceptionSubscriber implements EventSubscriberInterface
         }
 
         throw new LogicException("could not detect exception");
+    }
+
+    /**
+     * @param ExceptionEvent $event
+     * @return InternalErrorException|JsonRpcException|Throwable
+     */
+    public function wrapException(Throwable $exception)
+    {
+        if (empty($exception)) {
+            $exception = new InternalErrorException('exception could not be detected');
+        } elseif (!$exception instanceof JsonRpcException) {
+            $exception = new InternalErrorException('internal server error please report', $exception);
+        }
+
+        return $exception;
     }
 }

@@ -32,5 +32,11 @@
             "type": "git",
             "url": "git@github.com:Neznajki/json-rpc-common.git"
         }
+    },
+    "scripts": {
+        "auto-scripts": {
+            "cache:clear": "symfony-cmd",
+            "assets:install %PUBLIC_DIR%": "symfony-cmd"
+        }
     }
 }

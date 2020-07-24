@@ -9,10 +9,9 @@ use JsonRpcServerBundle\Event\FailMethodExecuteEvent;
 use JsonRpcServerBundle\Event\JsonRpcRequestPreparedEvent;
 use JsonRpcServerBundle\Event\SuccessMethodExecuteEvent;
 use JsonRpcServerBundle\Service\MethodExecutorService;
+use JsonRpcServerBundle\Subscriber\ExceptionSubscriber;
 use JsonRpcServerBundle\ValueObject\ExceptionResponseEntity;
-use JsonRpcServerBundle\Exception\InternalErrorException;
 use JsonRpcServerBundle\Exception\InvalidRequestException;
-use JsonRpcServerCommon\Contract\JsonRpcException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,16 +24,23 @@ class ApiEndpointController extends AbstractController
     protected $eventDispatcher;
     /** @var MethodExecutorService */
     protected $methodExecutorService;
+    /** @var ExceptionSubscriber */
+    protected $exceptionSubscriber;
 
     /**
      * ApiEndpointController constructor.
      * @param EventDispatcherInterface $eventDispatcher
      * @param MethodExecutorService $methodExecutorService
+     * @param ExceptionSubscriber $exceptionSubscriber
      */
-    public function __construct(EventDispatcherInterface $eventDispatcher, MethodExecutorService $methodExecutorService)
-    {
+    public function __construct(
+        EventDispatcherInterface $eventDispatcher,
+        MethodExecutorService $methodExecutorService,
+        ExceptionSubscriber $exceptionSubscriber
+    ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->methodExecutorService = $methodExecutorService;
+        $this->exceptionSubscriber = $exceptionSubscriber;
     }
 
     /**
@@ -47,17 +53,15 @@ class ApiEndpointController extends AbstractController
         $jsonRpcRequest = new JsonRpcRequest($request);
         $this->getEventDispatcher()->dispatch(new JsonRpcRequestPreparedEvent($jsonRpcRequest));
 
-        foreach ($jsonRpcRequest->getValidRequestCollection() as $requestEntity) {
+        $requestEntities = $jsonRpcRequest->getValidRequestCollection();
+        foreach ($requestEntities as $requestEntity) {
             try {
                 $response = $this->getMethodExecutorService()->executeMethod($requestEntity);
 
                 $jsonRpcRequest->getResponse()->addResponse($requestEntity, $response);
                 $this->getEventDispatcher()->dispatch(new SuccessMethodExecuteEvent($requestEntity, $response));
             } catch (Throwable $exception) {
-                $rpcException = $exception;
-                if (! $rpcException instanceof JsonRpcException) {
-                    $rpcException = new InternalErrorException('internal server error please report', $exception);
-                }
+                $rpcException = $this->exceptionSubscriber->wrapException($exception);
 
                 $responseEntity = new ExceptionResponseEntity($rpcException, $requestEntity);
                 $jsonRpcRequest->getResponse()->addResponse(
@@ -70,6 +74,7 @@ class ApiEndpointController extends AbstractController
         }
 
         $jsonRpcRequest->sortResponseInRequestOrder();
+
         return new JsonResponse($jsonRpcRequest->getResponse());
     }
 
